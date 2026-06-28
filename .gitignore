@@ -1,0 +1,16 @@
+# dados do cliente / NAO publicar
+*.csv
+*.txt
+*.parquet
+*.xlsx
+# segredos
+.env
+*.pem
+*.key
+key*.json
+*secret*
+# ambiente
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
