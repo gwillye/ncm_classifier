@@ -1,19 +1,12 @@
 # Configurações Otimizadas - HDBSCAN Hierárquico
 
-## 🎯 Escolha Seu Cenário
+## Escolha o seu cenário
 
-Este arquivo contém configurações pré-otimizadas para diferentes situações.
-**Copie e cole** a configuração adequada no arquivo `hdbscan_hierarchical_batches.py`.
+Este arquivo reúne configurações pré-otimizadas para diferentes situações. A ideia é simples: copie e cole o bloco do cenário que melhor se encaixa no seu caso dentro do arquivo `hdbscan_hierarchical_batches.py`.
 
----
+## Cenário 1: Máxima qualidade (máquina potente)
 
-## 📊 Cenário 1: Máxima Qualidade (Máquina Potente)
-
-**Quando usar:**
-- Você tem 16+ GB de RAM
-- Possui GPU dedicada
-- Tempo não é crítico (pode levar 3-5 horas)
-- Quer os melhores resultados possíveis
+Quando usar este cenário: você tem 16 GB de RAM ou mais, possui GPU dedicada, o tempo não é crítico (pode levar de 3 a 5 horas) e você quer os melhores resultados possíveis.
 
 ```python
 CONFIG = {
@@ -22,51 +15,41 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batches grandes para melhor contexto
     'BATCH_SIZE': 150000,
     'RANDOM_STATE': 42,
-    
+
     # Modelo de melhor qualidade
     'MODEL_NAME': 'paraphrase-multilingual-mpnet-base-v2',
     'EMBEDDING_BATCH_SIZE': 128,  # GPU necessária
-    
+
     # UMAP com mais componentes
     'UMAP_N_NEIGHBORS': 75,
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 20,  # Mais informação preservada
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN mais granular
     'HDBSCAN_MIN_CLUSTER_SIZE': 8,
     'HDBSCAN_MIN_SAMPLES': 4,
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge conservador (mais clusters)
     'CENTROID_SIMILARITY_THRESHOLD': 0.80,
     'CENTROID_MERGE_METHOD': 'complete',  # Mais conservador
-    
+
     # Reclassificação conservadora
     'OUTLIER_MAX_DISTANCE': 0.25,
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 3-5%
-- Clusters: 400-600
-- Tempo: 3-5 horas
-- Qualidade: Excelente
+Resultados esperados: outliers entre 3% e 5%, de 400 a 600 clusters, tempo de 3 a 5 horas, qualidade excelente.
 
----
+## Cenário 2: Máxima velocidade (resultados rápidos)
 
-## ⚡ Cenário 2: Máxima Velocidade (Resultados Rápidos)
-
-**Quando usar:**
-- Você quer resultados em 1-2 horas
-- Precisa de uma primeira análise rápida
-- Qualidade pode ser um pouco menor
-- RAM limitada (8 GB)
+Quando usar este cenário: você quer resultados em 1 ou 2 horas, precisa de uma primeira análise rápida, a qualidade pode ser um pouco menor e a RAM é limitada (8 GB).
 
 ```python
 CONFIG = {
@@ -75,51 +58,41 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batches grandes se possível
     'BATCH_SIZE': 200000,  # Menos batches = mais rápido
     'RANDOM_STATE': 42,
-    
+
     # Modelo rápido
     'MODEL_NAME': 'paraphrase-multilingual-MiniLM-L12-v2',  # Mais rápido
     'EMBEDDING_BATCH_SIZE': 128,
-    
+
     # UMAP rápido
     'UMAP_N_NEIGHBORS': 30,
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 8,  # Menos componentes = mais rápido
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN rápido
     'HDBSCAN_MIN_CLUSTER_SIZE': 15,  # Clusters maiores
     'HDBSCAN_MIN_SAMPLES': 8,
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge agressivo (menos clusters)
     'CENTROID_SIMILARITY_THRESHOLD': 0.90,
     'CENTROID_MERGE_METHOD': 'average',
-    
+
     # Reclassificação rápida
     'OUTLIER_MAX_DISTANCE': 0.35,
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 5-8%
-- Clusters: 200-300
-- Tempo: 1-2 horas
-- Qualidade: Boa
+Resultados esperados: outliers entre 5% e 8%, de 200 a 300 clusters, tempo de 1 a 2 horas, qualidade boa.
 
----
+## Cenário 3: Máquina fraca (8GB RAM, sem GPU)
 
-## 🖥️ Cenário 3: Máquina Fraca (8GB RAM, Sem GPU)
-
-**Quando usar:**
-- Você tem apenas 8 GB de RAM
-- Não tem GPU dedicada
-- Está OK em esperar mais tempo
-- Quer evitar travamentos
+Quando usar este cenário: você tem apenas 8 GB de RAM, não tem GPU dedicada, está OK em esperar mais tempo e quer evitar travamentos.
 
 ```python
 CONFIG = {
@@ -128,51 +101,41 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batches PEQUENOS para não travar
     'BATCH_SIZE': 50000,
     'RANDOM_STATE': 42,
-    
+
     # Modelo padrão, batch pequeno para CPU
     'MODEL_NAME': 'paraphrase-multilingual-mpnet-base-v2',
     'EMBEDDING_BATCH_SIZE': 32,  # CPU friendly
-    
+
     # UMAP conservador em memória
     'UMAP_N_NEIGHBORS': 30,
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 10,
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN padrão
     'HDBSCAN_MIN_CLUSTER_SIZE': 10,
     'HDBSCAN_MIN_SAMPLES': 5,
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge padrão
     'CENTROID_SIMILARITY_THRESHOLD': 0.85,
     'CENTROID_MERGE_METHOD': 'average',
-    
+
     # Reclassificação padrão
     'OUTLIER_MAX_DISTANCE': 0.30,
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 5-10%
-- Clusters: 300-400
-- Tempo: 5-8 horas
-- Qualidade: Boa
+Resultados esperados: outliers entre 5% e 10%, de 300 a 400 clusters, tempo de 5 a 8 horas, qualidade boa.
 
----
+## Cenário 4: Menos outliers (máxima cobertura)
 
-## 🎯 Cenário 4: Menos Outliers (Máxima Cobertura)
-
-**Quando usar:**
-- Você quer clusterizar o máximo possível
-- Outliers devem ser < 5%
-- OK em ter clusters maiores e mais heterogêneos
-- Prioriza quantidade sobre pureza
+Quando usar este cenário: você quer clusterizar o máximo possível, os outliers devem ficar abaixo de 5%, está OK em ter clusters maiores e mais heterogêneos e prioriza quantidade sobre pureza.
 
 ```python
 CONFIG = {
@@ -181,51 +144,41 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batch padrão
     'BATCH_SIZE': 100000,
     'RANDOM_STATE': 42,
-    
+
     # Modelo padrão
     'MODEL_NAME': 'paraphrase-multilingual-mpnet-base-v2',
     'EMBEDDING_BATCH_SIZE': 64,
-    
+
     # UMAP que favorece agrupamento
     'UMAP_N_NEIGHBORS': 100,  # Muito alto = mais agrupamento
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 15,
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN liberal
     'HDBSCAN_MIN_CLUSTER_SIZE': 5,   # Clusters menores
     'HDBSCAN_MIN_SAMPLES': 3,        # Mais flexível
     'HDBSCAN_CLUSTER_SELECTION': 'leaf',  # Mais clusters
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge agressivo
     'CENTROID_SIMILARITY_THRESHOLD': 0.95,  # Muito alto
     'CENTROID_MERGE_METHOD': 'single',  # Mais agressivo
-    
-    # Reclassificação MUY liberal
+
+    # Reclassificação muito liberal
     'OUTLIER_MAX_DISTANCE': 0.45,  # Alto = aceita mais distantes
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 2-5%
-- Clusters: 150-250
-- Tempo: 2-4 horas
-- Qualidade: Clusters menos puros, mas alta cobertura
+Resultados esperados: outliers entre 2% e 5%, de 150 a 250 clusters, tempo de 2 a 4 horas, com clusters menos puros mas alta cobertura.
 
----
+## Cenário 5: Mais clusters (máxima granularidade)
 
-## 📐 Cenário 5: Mais Clusters (Máxima Granularidade)
-
-**Quando usar:**
-- Você quer muitos clusters específicos
-- Prefere clusters pequenos e homogêneos
-- OK em ter mais outliers (10-15%)
-- Vai fazer rotulagem manual detalhada
+Quando usar este cenário: você quer muitos clusters específicos, prefere clusters pequenos e homogêneos, está OK em ter mais outliers (entre 10% e 15%) e vai fazer rotulagem manual detalhada.
 
 ```python
 CONFIG = {
@@ -234,51 +187,41 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batch padrão
     'BATCH_SIZE': 100000,
     'RANDOM_STATE': 42,
-    
+
     # Modelo padrão
     'MODEL_NAME': 'paraphrase-multilingual-mpnet-base-v2',
     'EMBEDDING_BATCH_SIZE': 64,
-    
+
     # UMAP que preserva estrutura local
     'UMAP_N_NEIGHBORS': 15,  # Baixo = clusters mais locais
     'UMAP_MIN_DIST': 0.1,    # Mais separação
     'UMAP_N_COMPONENTS': 20,  # Mais dimensões = mais estrutura
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN rigoroso
     'HDBSCAN_MIN_CLUSTER_SIZE': 15,  # Clusters maiores
     'HDBSCAN_MIN_SAMPLES': 10,       # Mais rigoroso
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge MUITO conservador
     'CENTROID_SIMILARITY_THRESHOLD': 0.70,  # Baixo = mais clusters
     'CENTROID_MERGE_METHOD': 'complete',     # Mais conservador
-    
+
     # Reclassificação conservadora
     'OUTLIER_MAX_DISTANCE': 0.20,  # Baixo = menos reclassificação
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 10-15%
-- Clusters: 600-1000
-- Tempo: 3-5 horas
-- Qualidade: Clusters muito puros e específicos
+Resultados esperados: outliers entre 10% e 15%, de 600 a 1000 clusters, tempo de 3 a 5 horas, com clusters muito puros e específicos.
 
----
+## Cenário 6: Balanceado (recomendado para iniciantes)
 
-## ⚖️ Cenário 6: Balanceado (Recomendado para Iniciantes)
-
-**Quando usar:**
-- Primeira vez usando o sistema
-- Não sabe qual escolher
-- Quer resultados equilibrados
-- Configuração "padrão de fábrica"
+Quando usar este cenário: é a sua primeira vez usando o sistema, você não sabe qual escolher, quer resultados equilibrados e prefere a configuração "padrão de fábrica".
 
 ```python
 CONFIG = {
@@ -287,78 +230,74 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     # Batch padrão
     'BATCH_SIZE': 100000,
     'RANDOM_STATE': 42,
-    
+
     # Modelo padrão
     'MODEL_NAME': 'paraphrase-multilingual-mpnet-base-v2',
     'EMBEDDING_BATCH_SIZE': 64,
-    
+
     # UMAP balanceado
     'UMAP_N_NEIGHBORS': 50,
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 15,
     'UMAP_METRIC': 'cosine',
-    
+
     # HDBSCAN balanceado
     'HDBSCAN_MIN_CLUSTER_SIZE': 10,
     'HDBSCAN_MIN_SAMPLES': 5,
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     # Merge balanceado
     'CENTROID_SIMILARITY_THRESHOLD': 0.85,
     'CENTROID_MERGE_METHOD': 'average',
-    
+
     # Reclassificação balanceada
     'OUTLIER_MAX_DISTANCE': 0.30,
 }
 ```
 
-**Resultados esperados:**
-- Outliers: 5-10%
-- Clusters: 300-400
-- Tempo: 2-4 horas
-- Qualidade: Boa para maioria dos casos
+Resultados esperados: outliers entre 5% e 10%, de 300 a 400 clusters, tempo de 2 a 4 horas, com qualidade boa para a maioria dos casos.
 
----
-
-## 🔧 Ajuste Fino Personalizado
+## Ajuste fino personalizado
 
 ### Quer MENOS outliers?
+
 ```python
-'OUTLIER_MAX_DISTANCE': 0.35,      # ↑ Aumente
-'HDBSCAN_MIN_CLUSTER_SIZE': 5,     # ↓ Diminua
-'HDBSCAN_MIN_SAMPLES': 3,          # ↓ Diminua
+'OUTLIER_MAX_DISTANCE': 0.35,      # Aumente
+'HDBSCAN_MIN_CLUSTER_SIZE': 5,     # Diminua
+'HDBSCAN_MIN_SAMPLES': 3,          # Diminua
 ```
 
 ### Quer MENOS clusters?
+
 ```python
-'CENTROID_SIMILARITY_THRESHOLD': 0.90,  # ↑ Aumente
-'HDBSCAN_MIN_CLUSTER_SIZE': 20,         # ↑ Aumente
-'UMAP_N_NEIGHBORS': 75,                 # ↑ Aumente
+'CENTROID_SIMILARITY_THRESHOLD': 0.90,  # Aumente
+'HDBSCAN_MIN_CLUSTER_SIZE': 20,         # Aumente
+'UMAP_N_NEIGHBORS': 75,                 # Aumente
 ```
 
 ### Quer MAIS velocidade?
+
 ```python
-'BATCH_SIZE': 200000,                   # ↑ Aumente (se tiver RAM)
-'UMAP_N_COMPONENTS': 10,                # ↓ Diminua
-'UMAP_N_NEIGHBORS': 30,                 # ↓ Diminua
+'BATCH_SIZE': 200000,                   # Aumente (se tiver RAM)
+'UMAP_N_COMPONENTS': 10,                # Diminua
+'UMAP_N_NEIGHBORS': 30,                 # Diminua
 'MODEL_NAME': 'paraphrase-multilingual-MiniLM-L12-v2',  # Modelo menor
 ```
 
 ### Está sem memória?
+
 ```python
-'BATCH_SIZE': 50000,                    # ↓ Diminua
-'UMAP_N_COMPONENTS': 10,                # ↓ Diminua
-'EMBEDDING_BATCH_SIZE': 32,             # ↓ Diminua
+'BATCH_SIZE': 50000,                    # Diminua
+'UMAP_N_COMPONENTS': 10,                # Diminua
+'EMBEDDING_BATCH_SIZE': 32,             # Diminua
 ```
 
----
-
-## 📊 Tabela Comparativa
+## Tabela comparativa
 
 | Cenário | RAM Mín. | Tempo | Outliers | Clusters | Melhor Para |
 |---------|----------|-------|----------|----------|-------------|
@@ -369,71 +308,41 @@ CONFIG = {
 | Mais Clusters | 16 GB | 3-5h | 10-15% | 600-1000 | Análise detalhada |
 | Balanceado | 12 GB | 2-4h | 5-10% | 300-400 | Primeira vez |
 
----
+## Dicas de escolha
 
-## 💡 Dicas de Escolha
+Escolha "Máxima Qualidade" se este for o seu resultado final para produção, se você tem hardware potente e se o tempo não é limitante.
 
-### Escolha "Máxima Qualidade" se:
-- ✅ Este é seu resultado final para produção
-- ✅ Você tem hardware potente
-- ✅ Tempo não é limitante
+Escolha "Máxima Velocidade" se você quer uma análise exploratória rápida, se vai iterar várias vezes e se precisa de resultados hoje.
 
-### Escolha "Máxima Velocidade" se:
-- ✅ Você quer uma análise exploratória rápida
-- ✅ Vai iterar múltiplas vezes
-- ✅ Precisa de resultados hoje
+Escolha "Máquina Fraca" se você tem 8GB de RAM ou menos, se o computador trava com facilidade e se você pode deixar rodando durante a noite.
 
-### Escolha "Máquina Fraca" se:
-- ✅ Você tem 8GB de RAM ou menos
-- ✅ Seu computador trava facilmente
-- ✅ Pode deixar rodando overnight
+Escolha "Menos Outliers" se o objetivo é clusterizar o máximo possível, se os outliers são problemáticos para o seu caso e se você pode revisar os clusters manualmente.
 
-### Escolha "Menos Outliers" se:
-- ✅ Seu objetivo é clusterizar o máximo possível
-- ✅ Outliers são problemáticos para seu caso
-- ✅ Pode revisar clusters manualmente
+Escolha "Mais Clusters" se você precisa de granularidade máxima, se vai fazer rotulagem manual detalhada e se prefere precisão sobre cobertura.
 
-### Escolha "Mais Clusters" se:
-- ✅ Você precisa de granularidade máxima
-- ✅ Vai fazer rotulagem manual detalhada
-- ✅ Prefere precisão sobre cobertura
+Escolha "Balanceado" se é a sua primeira vez usando o sistema, se você não tem certeza do que quer e se busca um bom ponto de partida.
 
-### Escolha "Balanceado" se:
-- ✅ Primeira vez usando o sistema
-- ✅ Não tem certeza do que quer
-- ✅ Quer um bom ponto de partida
+## Workflow recomendado
 
----
+1. Primeira execução: use o cenário Balanceado.
+2. Analise os resultados com `python analyze_results.py`.
+3. Ajuste conforme necessário: muitos outliers levam ao cenário Menos Outliers, clusters muito grandes levam ao cenário Mais Clusters e um processamento demorado leva ao cenário Máxima Velocidade.
+4. Refinamento final: use o cenário Máxima Qualidade.
 
-## 🔄 Workflow Recomendado
+## Como usar este arquivo
 
-1. **Primeira execução:** Use **Balanceado**
-2. **Analise os resultados:** `python analyze_results.py`
-3. **Ajuste conforme necessário:**
-   - Muitos outliers? → **Menos Outliers**
-   - Clusters muito grandes? → **Mais Clusters**
-   - Demorou muito? → **Máxima Velocidade**
-4. **Refinamento final:** Use **Máxima Qualidade**
+1. Escolha o seu cenário com base nas descrições acima.
+2. Copie o bloco CONFIG completo do cenário escolhido.
+3. Cole no arquivo `hdbscan_hierarchical_batches.py`, substituindo o CONFIG existente (linhas ~20-50).
+4. Execute com `python hdbscan_hierarchical_batches.py`.
+5. Analise os resultados.
+6. Ajuste se necessário.
 
----
+## Exemplo prático
 
-## 📝 Como Usar Este Arquivo
+Situação: você tem um notebook com 8GB de RAM, precisa de resultados em 2 horas e quer clusterizar o máximo possível.
 
-1. **Escolha seu cenário** baseado nas descrições acima
-2. **Copie** o bloco CONFIG completo do cenário escolhido
-3. **Cole** no arquivo `hdbscan_hierarchical_batches.py`
-   - Substitua o CONFIG existente (linhas ~20-50)
-4. **Execute:** `python hdbscan_hierarchical_batches.py`
-5. **Analise os resultados**
-6. **Ajuste se necessário**
-
----
-
-## 🎯 Exemplo Prático
-
-**Situação:** Você tem um notebook com 8GB RAM, precisa de resultados em 2 horas, e quer clusterizar o máximo possível.
-
-**Escolha:** Híbrido entre "Máquina Fraca" + "Máxima Velocidade" + "Menos Outliers"
+Escolha: um híbrido entre "Máquina Fraca", "Máxima Velocidade" e "Menos Outliers".
 
 ```python
 CONFIG = {
@@ -441,30 +350,28 @@ CONFIG = {
     'INPUT_SEP': ';',
     'INPUT_ENCODING': 'utf-8-sig',
     'OUTPUT_DIR': 'hdbscan_results',
-    
+
     'BATCH_SIZE': 75000,  # Médio para não travar
     'RANDOM_STATE': 42,
-    
+
     'MODEL_NAME': 'paraphrase-multilingual-MiniLM-L12-v2',  # Rápido
     'EMBEDDING_BATCH_SIZE': 32,  # CPU friendly
-    
+
     'UMAP_N_NEIGHBORS': 50,
     'UMAP_MIN_DIST': 0.0,
     'UMAP_N_COMPONENTS': 10,  # Rápido
     'UMAP_METRIC': 'cosine',
-    
+
     'HDBSCAN_MIN_CLUSTER_SIZE': 8,   # Flexível
     'HDBSCAN_MIN_SAMPLES': 4,
     'HDBSCAN_CLUSTER_SELECTION': 'eom',
     'HDBSCAN_METRIC': 'euclidean',
-    
+
     'CENTROID_SIMILARITY_THRESHOLD': 0.88,  # Meio termo
     'CENTROID_MERGE_METHOD': 'average',
-    
+
     'OUTLIER_MAX_DISTANCE': 0.35,  # Liberal
 }
 ```
 
----
-
-**Boa escolha de configuração! 🚀**
+Boa escolha de configuração.
